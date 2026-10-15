@@ -1,0 +1,162 @@
+// Version: 4.0.0
+type AccessControlState__201339279 =
+  {
+    var adminAssigned : Bool;
+    userRoles : Map__230067015<Principal, UserRole__91647283>
+  };
+type BillingModel__773044689 = {#fixedFee; #hourly};
+type BillingModel__779516163 = {#fixedFee; #hourly};
+type ClientId__724934594 = Nat;
+type ClientId__900668135 = ClientId__724934594;
+type ClientStatus__290925565 = {#active; #archived; #lead};
+type ClientStatus__586235630 = {#active; #archived; #lead};
+type Client__488727031 =
+  {
+    contactPerson : Text;
+    createdAt : Timestamp__892471135;
+    email : Text;
+    id : ClientId__900668135;
+    industry : Text;
+    name : Text;
+    owner : Principal;
+    status : ClientStatus__586235630
+  };
+type Client__762361030 =
+  {
+    contactPerson : Text;
+    createdAt : Int;
+    email : Text;
+    id : Nat;
+    industry : Text;
+    name : Text;
+    owner : Principal;
+    status : ClientStatus__290925565
+  };
+type Data__44217153<K, V> = {var count : Nat__227979830; kvs : [var ?(K, V)]};
+type EngagementId__1001029957 = EngagementId__306324474;
+type EngagementId__306324474 = Nat;
+type EngagementId__782888763 = EngagementId__306324474;
+type EngagementStatus__609556475 =
+  {#active; #archived; #completed; #proposed};
+type EngagementStatus__64258459 = {#active; #archived; #completed; #proposed};
+type Engagement__107081202 =
+  {
+    billableRate : Nat;
+    billingModel : BillingModel__773044689;
+    clientId : ClientId__900668135;
+    costRate : Nat;
+    createdAt : Timestamp__892471135;
+    endDate : ?Timestamp__892471135;
+    fixedFee : ?Nat;
+    id : EngagementId__1001029957;
+    name : Text;
+    owner : Principal;
+    scope : Text;
+    startDate : Timestamp__892471135;
+    status : EngagementStatus__609556475
+  };
+type Engagement__123929543 =
+  {
+    billableRate : Nat;
+    billingModel : BillingModel__779516163;
+    clientId : Nat;
+    costRate : Nat;
+    createdAt : Int;
+    endDate : ?Int;
+    fixedFee : ?Nat;
+    id : Nat;
+    name : Text;
+    owner : Principal;
+    scope : Text;
+    startDate : Int;
+    status : EngagementStatus__64258459
+  };
+type Internal__283199666<K, V> =
+  {children : [var ?Node__204828119<K, V>]; data : Data__44217153<K, V>};
+type Leaf__598469445<K, V> = {data : Data__44217153<K, V>};
+type Map__230067015<K, V> = Map__405889023<K, V>;
+type Map__405889023<K, V> = Map__603270868<K, V>;
+type Map__603270868<K, V> =
+  {var root : Node__204828119<K, V>; var size : Nat__227979830};
+type Nat__227979830 = Nat__920180692;
+type Nat__920180692 = Nat;
+type NewActor__509073098 =
+  {
+    accessControlState : AccessControlState__201339279;
+    clients : Map__230067015<Nat, Client__762361030>;
+    counters :
+      {
+        var nextClientId : Nat;
+        var nextEngagementId : Nat;
+        var nextEntryId : Nat
+      };
+    engagements : Map__230067015<Nat, Engagement__123929543>;
+    timeEntries : Map__230067015<Nat, TimeEntry__559222393>
+  };
+type Node__204828119<K, V> =
+  {#internal : Internal__283199666<K, V>; #leaf : Leaf__598469445<K, V>};
+type OldActor__439659195 = {};
+type TimeEntryId__419300627 = Nat;
+type TimeEntryId__851813768 = TimeEntryId__419300627;
+type TimeEntry__559222393 =
+  {
+    billable : Bool;
+    createdAt : Int;
+    date : Int;
+    description : Text;
+    engagementId : Nat;
+    expenseAmount : ?Nat;
+    hours : Nat;
+    id : Nat;
+    invoiced : Bool;
+    owner : Principal
+  };
+type TimeEntry__822115612 =
+  {
+    billable : Bool;
+    createdAt : Timestamp__681710517;
+    date : Timestamp__681710517;
+    description : Text;
+    engagementId : EngagementId__782888763;
+    expenseAmount : ?Nat;
+    hours : Nat;
+    id : TimeEntryId__851813768;
+    invoiced : Bool;
+    owner : Principal
+  };
+type Timestamp__301639476 = Int;
+type Timestamp__681710517 = Timestamp__301639476;
+type Timestamp__892471135 = Timestamp__301639476;
+type UserRole__91647283 = {#admin; #guest; #user};
+{
+  "20261015_120000" : OldActor__439659195 -> NewActor__509073098
+}
+actor  {
+  stable accessControlState :
+    {
+      var adminAssigned : Bool;
+      userRoles : Map__230067015<Principal, UserRole__91647283>
+    };
+  stable clients :
+    {
+      var root : Node__204828119<ClientId__900668135, Client__488727031>;
+      var size : Nat__227979830
+    };
+  stable counters :
+    {
+      var nextClientId : Nat;
+      var nextEngagementId : Nat;
+      var nextEntryId : Nat
+    };
+  stable engagements :
+    {
+      var root :
+        Node__204828119<EngagementId__1001029957, Engagement__107081202>;
+      var size : Nat__227979830
+    };
+  stable timeEntries :
+    {
+      var root : Node__204828119<TimeEntryId__851813768, TimeEntry__822115612>;
+      var size : Nat__227979830
+    }
+};

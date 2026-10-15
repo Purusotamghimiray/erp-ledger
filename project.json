@@ -1,0 +1,23 @@
+{
+  "overview": "A business management app for a freelance ERP consultant to track clients, engagements, billable time, and profitability.",
+  "features": [
+    "Client directory with contact details, industry, and status",
+    "Engagements with billing model, rates, and scope",
+    "Time logging with billable flags and weekly timesheet review",
+    "Profitability dashboard with revenue, cost, margin, and utilization",
+    "Per-client and per-engagement profitability ranking",
+    "12-month trend chart of hours and revenue",
+    "Unbilled work summary",
+    "Private per-consultant data behind sign-in"
+  ],
+  "category": "business-management",
+  "tags": [
+    "erp",
+    "consulting",
+    "freelance",
+    "time-tracking",
+    "profitability",
+    "b2b"
+  ],
+  "last_updated": "2026-10-15T10:30:07.901Z"
+}

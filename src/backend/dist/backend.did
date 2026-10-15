@@ -1,0 +1,231 @@
+type Value = 
+ variant {
+   "bool": bool;
+   float: float64;
+   "int": int;
+   "nat": nat;
+   "null";
+   "text": text;
+ };
+type UserRole = 
+ variant {
+   admin;
+   guest;
+   user;
+ };
+type UnbilledSummary = 
+ record {
+   entryCount: nat;
+   unbilledHours: nat;
+   unbilledValue: nat;
+ };
+type Timestamp = int;
+type TimeEntryInput = 
+ record {
+   billable: bool;
+   date: Timestamp;
+   description: text;
+   engagementId: EngagementId;
+   expenseAmount: opt nat;
+   hours: nat;
+ };
+type TimeEntryId = nat;
+type TimeEntryFilter = 
+ record {
+   billable: opt bool;
+   engagementId: opt EngagementId;
+   from: opt Timestamp;
+   invoiced: opt bool;
+   to: opt Timestamp;
+ };
+type TimeEntry = 
+ record {
+   billable: bool;
+   createdAt: Timestamp;
+   date: Timestamp;
+   description: text;
+   engagementId: EngagementId;
+   expenseAmount: opt nat;
+   hours: nat;
+   id: TimeEntryId;
+   invoiced: bool;
+   owner: principal;
+ };
+type Result__1 = 
+ variant {
+   err: Error;
+   ok;
+ };
+type Result = 
+ record {
+   hasMore: bool;
+   rows: vec vec Cell;
+ };
+type ProfitabilityRow = 
+ record {
+   cost: nat;
+   id: nat;
+   margin: int;
+   marginPercent: int;
+   name: text;
+   revenue: nat;
+ };
+type MonthlyTrendPoint = 
+ record {
+   hours: nat;
+   month: nat;
+   revenue: nat;
+   year: nat;
+ };
+type Error = 
+ variant {
+   AmbiguousAttribute: record {
+                         field: text;
+                         sources: vec text;
+                       };
+   FrontendOriginMismatch: record {
+                             expected: vec text;
+                             got: text;
+                           };
+   FrontendOriginsNotConfigured;
+   MalformedCandid;
+   MissingField: text;
+   MixedSsoSources: record {
+                      otherKeys: vec text;
+                      ssoKeys: vec text;
+                    };
+   NoAttributes;
+   Stale: record {ageNs: nat;};
+   UnknownNonce;
+   UntrustedSsoSource: record {domain: text;};
+ };
+type EngagementStatus = 
+ variant {
+   active;
+   archived;
+   completed;
+   proposed;
+ };
+type EngagementInput = 
+ record {
+   billableRate: nat;
+   billingModel: BillingModel;
+   clientId: ClientId;
+   costRate: nat;
+   endDate: opt Timestamp;
+   fixedFee: opt nat;
+   name: text;
+   scope: text;
+   startDate: Timestamp;
+   status: EngagementStatus;
+ };
+type EngagementId = nat;
+type EngagementFilter = 
+ record {
+   clientId: opt ClientId;
+   search: opt text;
+   status: opt EngagementStatus;
+ };
+type Engagement = 
+ record {
+   billableRate: nat;
+   billingModel: BillingModel;
+   clientId: ClientId;
+   costRate: nat;
+   createdAt: Timestamp;
+   endDate: opt Timestamp;
+   fixedFee: opt nat;
+   id: EngagementId;
+   name: text;
+   owner: principal;
+   scope: text;
+   startDate: Timestamp;
+   status: EngagementStatus;
+ };
+type DashboardSummary = 
+ record {
+   billableHours: nat;
+   grossMargin: int;
+   totalCost: nat;
+   totalHours: nat;
+   totalRevenue: nat;
+   utilizationPercent: nat;
+ };
+type ClientStatus = 
+ variant {
+   active;
+   archived;
+   lead;
+ };
+type ClientInput = 
+ record {
+   contactPerson: text;
+   email: text;
+   industry: text;
+   name: text;
+   status: ClientStatus;
+ };
+type ClientId = nat;
+type ClientFilter = 
+ record {
+   industry: opt text;
+   search: opt text;
+   status: opt ClientStatus;
+ };
+type Client = 
+ record {
+   contactPerson: text;
+   createdAt: Timestamp;
+   email: text;
+   id: ClientId;
+   industry: text;
+   name: text;
+   owner: principal;
+   status: ClientStatus;
+ };
+type Cell = 
+ record {
+   name: text;
+   value: Value;
+ };
+type BillingModel = 
+ variant {
+   fixedFee;
+   hourly;
+ };
+service : {
+  _initialize_access_control: () -> ();
+  _internet_identity_sign_in_finish: () -> (Result__1);
+  _internet_identity_sign_in_start: () -> (blob);
+  assignCallerUserRole: (user: principal, role: UserRole) -> ();
+  createClient: (input: ClientInput) -> (Client);
+  createEngagement: (input: EngagementInput) -> (Engagement);
+  createTimeEntry: (input: TimeEntryInput) -> (TimeEntry);
+  deleteClient: (id: ClientId) -> (bool);
+  deleteEngagement: (id: EngagementId) -> (bool);
+  deleteTimeEntry: (id: TimeEntryId) -> (bool);
+  execute: (qJson: text) -> (Result) query;
+  getApiDoc: () -> (text) query;
+  getCallerUserRole: () -> (UserRole) query;
+  getClient: (id: ClientId) -> (opt Client) query;
+  getClientProfitability: () -> (vec ProfitabilityRow) query;
+  getDashboardSummary: () -> (DashboardSummary) query;
+  getEngagement: (id: EngagementId) -> (opt Engagement) query;
+  getEngagementProfitability: () -> (vec ProfitabilityRow) query;
+  getMonthlyTrend: (months: nat) -> (vec MonthlyTrendPoint) query;
+  getTimeEntry: (id: TimeEntryId) -> (opt TimeEntry) query;
+  getUnbilledSummary: () -> (UnbilledSummary) query;
+  isCallerAdmin: () -> (bool) query;
+  listClients: (filter: ClientFilter) -> (vec Client) query;
+  listEngagements: (filter: EngagementFilter) -> (vec Engagement) query;
+  listTimeEntries: (filter: TimeEntryFilter) -> (vec TimeEntry) query;
+  listWeekEntries: (weekStart: Timestamp) -> (vec TimeEntry) query;
+  schema: () -> (text) query;
+  seedSampleData: () -> ();
+  setTimeEntryInvoiced: (id: TimeEntryId, invoiced: bool) -> (opt TimeEntry);
+  updateClient: (id: ClientId, input: ClientInput) -> (opt Client);
+  updateEngagement: (id: EngagementId, input: EngagementInput) ->
+   (opt Engagement);
+  updateTimeEntry: (id: TimeEntryId, input: TimeEntryInput) ->
+   (opt TimeEntry);
+}
